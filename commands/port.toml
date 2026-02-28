@@ -1,0 +1,2 @@
+description = "Port a project to a new target language."
+prompt = "Activating the code-forge skill: port. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for port."

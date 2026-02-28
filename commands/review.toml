@@ -1,0 +1,2 @@
+description = "Comprehensive code review against practices."
+prompt = "Activating the code-forge skill: review. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for review."

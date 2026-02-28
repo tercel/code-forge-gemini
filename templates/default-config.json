@@ -1,0 +1,41 @@
+{
+  "version": "1.0",
+
+  "_tool": {
+    "name": "code-forge",
+    "description": "Transform documentation into actionable development plans with task breakdown and status tracking",
+    "url": "https://github.com/tercel/code-forge",
+    "skills_collection": "https://github.com/tercel/gemini-cli-skills"
+  },
+
+  "directories": {
+    "base": "",
+    "input": "docs/features/",
+    "output": "planning/"
+  },
+
+  "naming": {
+    "feature_prefix": "",
+    "task_prefix": "",
+    "use_date": false
+  },
+
+  "git": {
+    "auto_commit": false,
+    "commit_state_file": true,
+    "gitignore_patterns": [
+      "**/.code-forge-temp/"
+    ]
+  },
+
+  "execution": {
+    "default_mode": "ask",
+    "auto_tdd": true,
+    "task_granularity": "medium"
+  },
+
+  "reference_docs": {
+    "sources": [],
+    "exclude": []
+  }
+}

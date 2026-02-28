@@ -1,0 +1,2 @@
+description = "Dispatch sub-agents for concurrent solving."
+prompt = "Activating the code-forge skill: parallel. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for parallel."

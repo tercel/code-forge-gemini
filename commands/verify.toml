@@ -1,0 +1,2 @@
+description = "Evidence-based completion verification."
+prompt = "Activating the code-forge skill: verify. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for verify."

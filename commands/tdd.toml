@@ -1,0 +1,2 @@
+description = "Enforce Red-Green-Refactor cycle discipline."
+prompt = "Activating the code-forge skill: tdd. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for tdd."
