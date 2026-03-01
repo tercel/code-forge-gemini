@@ -1,6 +1,6 @@
 ---
 name: impl
-description: Execute pending tasks for a feature — TDD-driven implementation with sub-agent isolation and progress tracking. Use after an implementation plan has been generated.
+description: Execute pending tasks for a feature — TDD-driven implementation with sub-agent isolation and progress tracking.
 ---
 
 # Code Forge — Impl
@@ -21,7 +21,7 @@ Locate Feature → Confirm Execution → Task Loop (sub-agents) → Verify → C
 
 ## Context Management
 
-Step 11 dispatches a dedicated sub-agent for each task, so code changes from one task don't pollute the context of the next. The main context only handles coordination: reading state, dispatching sub-agents, and updating status.
+Step 11 dispatches a dedicated sub-agent for each task to prevent context window exhaustion and cross-task pollution. The main context only handles coordination: reading state, dispatching sub-agents, and updating status.
 
 ## Detailed Steps
 
@@ -34,77 +34,61 @@ Read and follow [configuration.md](references/configuration.md) for configuratio
 ### Step 1: Locate Feature
 
 #### 1.1 With Feature Name Argument
-
-If the user provided a feature name:
-1. Look for `{output_dir}/{feature_name}/state.json`
-2. If not found, search `{output_dir}/*/state.json` for a match.
-3. If still not found, show error.
+Search for `{output_dir}/{feature_name}/state.json`. If not found, search all features for a match.
 
 #### 1.2 Without Argument
-
-If no feature name is provided:
-1. Scan `{output_dir}/*/state.json` for all features.
-2. Filter to features with `status` = `"pending"` or `"in_progress"`.
-3. If multiple found, use `ask_user` to let user select.
+Scan for features with `status` = `"pending"` or `"in_progress"`. Use `ask_user` if multiple are found.
 
 #### 1.3 Validate Feature State
-
-Check that `tasks` array is non-empty and task files exist. Show feature progress summary.
+Verify `tasks` are present and files exist. Show progress summary.
 
 ---
 
 ### Step 10: Ask for Execution Method
 
 Use `ask_user`:
-- **"Start Execution Now (Recommended)"**
-- **"Manual Execution Later"**
-- **"Team Collaboration Mode"**
-- **"Generate Plan Only"** (if applicable)
+- **"Start Execution Now (Recommended)"** — execute tasks one by one.
+- **"Manual Execution Later"** — save and show resume instructions.
+- **"Team Collaboration Mode"** — show guidelines for Git and task claiming.
 
 ### Step 11: Task Execution Loop (via Sub-agents)
 
-**Each task is executed by a dedicated `gsd-executor` sub-agent** to prevent cross-task context accumulation.
+**Each task is executed by a dedicated sub-agent** to prevent cross-task context accumulation.
 
 #### 11.1 Coordination Loop (Main Context)
 
 1. Read `state.json`.
-2. Find the next task in `execution_order`.
-3. Update task status to `"in_progress"`.
+2. Find the next `pending` task in `execution_order` with no unmet dependencies.
+3. Update task status to `"in_progress"` in `state.json`.
 4. **Dispatch sub-agent** for this task (see 11.2).
 5. Review the sub-agent's execution summary.
-6. Use `ask_user` to confirm task completion and proceed.
+6. Use `ask_user`: "Is the task completed?"
+   - **"Completed, continue to next"** → update status to `"completed"`, continue loop.
+   - **"Encountered issue, pause"** → keep `"in_progress"`, exit loop.
+   - **"Skip this task"** → update status to `"skipped"`, continue loop.
 
 #### 11.2 Task Execution Sub-agent
 
-Spawn a `gsd-executor` sub-agent.
+Spawn a `codebase_investigator` sub-agent (or general task).
 
 **Sub-agent instruction must include:**
-- The task file path.
-- Tech stack and testing strategy.
+- Task file path (e.g., `planning/feature/tasks/setup.md`).
+- Project root path.
+- Tech stack and testing strategy from `state.json`.
+- **Coding standards (mandatory):** follow [coding-standards.md](references/coding-standards.md).
 - Instruction to follow TDD: write tests → run tests → implement → verify.
-- **Coding standards (mandatory):** ensure the sub-agent follows [coding-standards.md](references/coding-standards.md).
-- Instruction to return ONLY a concise execution summary.
-
-**Sub-agent executes:**
-1. Follow the task steps.
-2. Commit changes if all tests pass.
-
-**Sub-agent must return** a concise execution summary with `STATUS`, `FILES_CHANGED`, `TEST_RESULTS`, and `SUMMARY`.
+- Instruction to return ONLY a concise execution summary: `STATUS`, `FILES_CHANGED`, `TEST_RESULTS`, `SUMMARY`, `ISSUES`.
 
 #### 11.3 Parallel Execution (Optional)
 
-When multiple pending tasks have **no mutual dependencies**, they may be dispatched as parallel sub-agents.
+When tasks have no mutual dependencies and modify different files, they may be dispatched as parallel sub-agents.
 
 ### Step 11.5: Verify Generated Files
 
-Verify all generated files and `state.json` validity.
+Mandatory check of `overview.md`, `plan.md`, `state.json`, and task files. Auto-fix missing files if possible.
 
 ---
 
 ### Step 12: Completion Summary
 
-After all tasks are completed:
-1. Update `state.json`.
-2. Regenerate the project-level overview (see [overview-generation.md](references/overview-generation.md)).
-
-Output completion summary and next steps.
+Update `state.json`, regenerate project overview (see [overview-generation.md](references/overview-generation.md)), and display next steps for `/code-forge:review`.

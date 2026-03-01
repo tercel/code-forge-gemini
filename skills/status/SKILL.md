@@ -1,6 +1,6 @@
 ---
 name: status
-description: Display feature dashboard, progress tracking, and project-level overview. Use to check the current state of implementation plans and overall project progress.
+description: Display feature dashboard, progress tracking, and project-level overview.
 ---
 
 # Code Forge — Status
@@ -39,32 +39,49 @@ Based on arguments:
 
 #### 2.1 Scan for Features
 
-1. Resolve the output directory.
+1. Resolve the output directory: `<base_dir>/<output_dir>/`.
 2. Search for all `state.json` files using `glob`.
-3. Extract feature details from each `state.json`.
+3. Extract feature details (name, status, progress, updated).
 
 #### 2.2 Display Feature Dashboard
 
-Show a table with all features found and their current status. Offer actions via `ask_user`.
+Show a table with all features found:
+
+```
+code-forge — Feature Dashboard
+
+  #  | Feature        | Progress   | Status      | Last Updated
+  1  | user-auth      | 3/5 (60%)  | in_progress | 2026-02-14
+  2  | file-upload    | 0/3 (0%)   | pending     | 2026-02-13
+  3  | notifications  | 4/4 (100%) | completed   | 2026-02-12
+```
+
+Offer actions via `ask_user`:
+- **"Select Feature to View Detail"** → enter feature name or select from list.
+- **"Start a New Plan"** → suggest `/code-forge:plan`.
+- **"Exit"**.
 
 #### 2.3 Update Project-Level Overview
 
-After scanning, regenerate `{output_dir}/overview.md`. See [overview-generation.md](references/overview-generation.md).
+Regenerate `{output_dir}/overview.md` (see [overview-generation.md](references/overview-generation.md)).
 
 ---
 
 ### Step 3: Feature Detail
 
 #### 3.1 Locate Feature
-
 Look for `{output_dir}/{feature_name}/state.json`.
 
 #### 3.2 Display Feature Detail
 
-Read `state.json` and display feature status, source, and a detailed task list with progress.
+Read `state.json` and display:
+- **Status, Source, Dates**.
+- **Task List Table**: #, Task, Status, Dates.
+- **Progress Summary**.
+- **Commands**: `/code-forge:impl`, `/code-forge:review`, `/code-forge:fixbug`.
 
 ---
 
 ### Step 4: Generate/Update Project-Level Overview
 
-Follow the logic in [overview-generation.md](references/overview-generation.md) to update the project-level overview.
+Follow [overview-generation.md](references/overview-generation.md) to update the bird's-eye view of all features.

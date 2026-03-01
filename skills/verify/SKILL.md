@@ -1,6 +1,9 @@
 ---
 name: verify
-description: Evidence-based completion verification. Use before claiming work is done, fixed, or passing. Requires running verification commands and confirming output before any success claim.
+description: >
+  Use before claiming work is done, fixed, or passing — requires running verification
+  commands and confirming output before any success claim. Prevents false completion
+  claims, unverified assertions, and "should work" statements.
 ---
 
 # Code Forge — Verify
@@ -14,11 +17,13 @@ Evidence-based completion verification. Run before claiming any work is done.
 - After any code change that should be verified.
 - When reviewing sub-agent output before trusting it.
 
-**Note:** The main implementation workflow runs verification automatically. This skill is for general use.
+**Note:** `code-forge:impl` runs verification automatically. This skill is for general use.
 
 ## Iron Law
 
 **NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE.**
+
+No exceptions. Not "it should work." Not "I just ran it." Not "the agent said it passed."
 
 ## Workflow
 
@@ -36,13 +41,27 @@ Every claim must pass through this gate:
 4. **VERIFY** the output matches the claim (zero failures, exit code 0).
 5. **ONLY THEN** make the claim.
 
+## Forbidden Words
+
+These words in a completion claim are red flags — they mean you haven't verified:
+
+- "should work" / "should pass"
+- "probably" / "likely"
+- "seems to" / "appears to"
+- "I believe" / "I think"
+- "it worked before"
+
+Replace with evidence: "All 34 tests pass (output: 34 passed, 0 failed, exit code 0)."
+
 ## Verification Patterns
 
 ### Tests
 Run command → See "X passed, 0 failed" → Claim "all tests pass".
+NOT: "Tests should pass now" or "I fixed the issue so tests will pass."
 
 ### Regression Test
 Write test → Run (PASS) → Revert fix → Run (MUST FAIL) → Restore fix → Run (PASS).
+The revert-and-fail step proves the test actually catches the bug.
 
 ### Build
 Run build → See exit code 0, no errors → Claim "build passes".
@@ -56,4 +75,5 @@ NEVER trust agent reports without independent verification.
 - Trusting memory of a previous test run instead of running fresh.
 - Reading only the last line of output, missing errors above.
 - Claiming "build passes" after only running tests (or vice versa).
-- Skipping verification because it's a small change.
+- Verifying one aspect but claiming completeness for all aspects.
+- Skipping verification "just this once" because it's a small change.
