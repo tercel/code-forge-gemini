@@ -90,9 +90,13 @@ Display the review report in the terminal. Optionally save to file if `--save` i
 
 ---
 
-### Step 5F: Update state.json
+### Step 5F: Feature Mode — Update state.json
 
 Update feature metadata in `state.json` with review results.
+
+### Step 5P: Project Mode — No State Update
+
+Project mode does not update any `state.json` — there is no single feature state to track.
 
 ---
 

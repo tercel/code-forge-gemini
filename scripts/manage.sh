@@ -6,9 +6,53 @@ COMMANDS_DIR="commands"
 DIST_DIR="dist"
 
 # Auto-detect package_skill.cjs path
-PACKAGER_PATH=$(npm list -g @google/gemini-cli --parseable 2>/dev/null | head -n 1)/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs
-if [ ! -f "$PACKAGER_PATH" ]; then
-    PACKAGER_PATH="/Users/tercel/.nvm/versions/node/v22.22.0/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+function find_packager() {
+    # 1. Try to find relative to gemini executable
+    local gemini_bin=$(command -v gemini)
+    if [ -n "$gemini_bin" ]; then
+        local real_bin=$(readlink -f "$gemini_bin" 2>/dev/null || realpath "$gemini_bin" 2>/dev/null || echo "$gemini_bin")
+        local current_dir="$real_bin"
+        
+        # Climb up 5 levels to look for node_modules/@google/gemini-cli-core
+        for i in {1..5}; do
+            current_dir=$(dirname "$current_dir")
+            local target="$current_dir/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+            if [ -f "$target" ]; then
+                echo "$target"
+                return
+            fi
+        done
+    fi
+
+    # 2. Try npm list -g
+    local npm_path=$(npm list -g @google/gemini-cli --parseable 2>/dev/null | head -n 1)
+    if [ -n "$npm_path" ]; then
+        local target="$npm_path/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+        if [ -f "$target" ]; then
+            echo "$target"
+            return
+        fi
+    fi
+
+    # 3. Last resort fallback to common locations
+    local fallbacks=(
+        "/usr/local/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+        "/opt/homebrew/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+        "/opt/homebrew/Cellar/gemini-cli/0.31.0/libexec/lib/node_modules/@google/gemini-cli/node_modules/@google/gemini-cli-core/dist/src/skills/builtin/skill-creator/scripts/package_skill.cjs"
+    )
+    for fb in "${fallbacks[@]}"; do
+        if [ -f "$fb" ]; then
+            echo "$fb"
+            return
+        fi
+    done
+}
+
+PACKAGER_PATH=$(find_packager)
+
+if [ -z "$PACKAGER_PATH" ] || [ ! -f "$PACKAGER_PATH" ]; then
+    echo "❌ Error: Could not find 'package_skill.cjs'. Please ensure @google/gemini-cli is installed."
+    exit 1
 fi
 
 function package_all() {
