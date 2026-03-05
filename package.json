@@ -1,6 +1,6 @@
 {
   "name": "code-forge-gemini",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "> Complete development workflow — from TDD-driven implementation plans to execution, debugging, code review, git worktree management, branch lifecycle, and parallel agent dispatch.",
   "main": "index.js",
   "scripts": {
