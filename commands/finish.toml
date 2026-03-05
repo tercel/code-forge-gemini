@@ -1,2 +1,2 @@
 description = "Complete a development branch and cleanup."
-prompt = "Activating the code-forge skill: finish. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for finish."
+prompt = "Activate the code-forge:finish skill. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for finish."

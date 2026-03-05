@@ -1,2 +1,2 @@
 description = "Debug and fix bugs with interactive trace-back."
-prompt = "Activating the code-forge skill: fixbug. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for fixbug."
+prompt = "Activate the code-forge:fixbug skill. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for fixbug."

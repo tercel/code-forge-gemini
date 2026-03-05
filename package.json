@@ -1,20 +1,16 @@
 {
   "name": "code-forge-gemini",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "> Complete development workflow — from TDD-driven implementation plans to execution, debugging, code review, git worktree management, branch lifecycle, and parallel agent dispatch.",
   "main": "index.js",
-  "directories": {
-    "doc": "docs",
-    "example": "examples"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "bash scripts/manage.sh package",
-    "install:user": "bash scripts/manage.sh install user",
-    "install:workspace": "bash scripts/manage.sh install workspace",
-    "deploy": "bash scripts/manage.sh all user",
-    "uninstall:user": "bash scripts/manage.sh uninstall user",
-    "uninstall:workspace": "bash scripts/manage.sh uninstall workspace"
+    "package": "gemini-forge package",
+    "install:user": "gemini-forge install user",
+    "install:workspace": "gemini-forge install workspace",
+    "deploy": "gemini-forge deploy user",
+    "uninstall:user": "gemini-forge uninstall user",
+    "uninstall:workspace": "gemini-forge uninstall workspace"
   },
   "keywords": [],
   "author": "",

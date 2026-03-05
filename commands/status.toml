@@ -1,2 +1,2 @@
 description = "Display feature dashboard and progress."
-prompt = "Activating the code-forge skill: status. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for status."
+prompt = "Activate the code-forge:status skill. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for status."

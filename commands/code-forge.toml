@@ -1,0 +1,3 @@
+description = "Professional software development lifecycle orchestrator — from planning to implementation, review, and TDD."
+argument-hint = "[plan|impl|review|debug|status] <arguments>"
+prompt = "Activating the code-forge orchestrator. Please process the following input or context: {{args}}. If no input is provided, show the dashboard."

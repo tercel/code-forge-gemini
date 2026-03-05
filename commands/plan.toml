@@ -1,2 +1,2 @@
 description = "Analyze documentation and generate a plan."
-prompt = "Activating the code-forge skill: plan. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for plan."
+prompt = "Activate the code-forge:plan skill. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for plan."

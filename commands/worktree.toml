@@ -1,2 +1,2 @@
 description = "Create an isolated git worktree."
-prompt = "Activating the code-forge skill: worktree. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for worktree."
+prompt = "Activate the code-forge:worktree skill. Please process the following input or context: {{args}}. If no input is provided, proceed with the default workflow for worktree."
